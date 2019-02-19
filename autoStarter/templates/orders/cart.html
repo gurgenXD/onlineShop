@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+
+
+{% block title %}
+    Корзина
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-0">Корзина</h1>
+
+        <div class="cart-step active">
+            <label>1</label>
+            <span>Состав заказа</span>
+        </div>
+
+        <div class="cart-step">
+            <label>2</label>
+            <span>Контактная информация</span>
+        </div>
+
+        <div class="cart-step">
+            <label>3</label>
+            <span>Финал</span>
+        </div>
+
+        <div class="cart-items mt-4">
+            {% for item in cart %}
+                <div class="cart-item cart-item-{{ item.product_id }}">
+                    <div class="row d-flex justify-content-start align-items-center">
+                        <div class="col-lg-1">
+                            <a href="{{ item.product_get_absolute_url }}" title="">
+                                <img src="{{ item.product_image_url|resize:'64x64,C' }}">
+                            </a>
+                        </div>
+                        <div class="col-lg-4">
+                            <a href="{{ item.product_get_absolute_url }}" title="" class="cart-item-name">
+                                {{ item.product_name }}
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 text-lg-center">
+                            <span class="cart-item-price">{{ item.price }}<i class="fas fa-ruble-sign"></i></span>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-6 text-lg-center">
+                            <form class="qty form-quantity" action="{% url 'change_quantity' %}">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text minus form-control-sm">-</span>
+                                    </div>
+                                    <input type="number" data-id="{{ item.product_id }}" min="1" max="{{ item.product_stock }}" class="count  form-control form-control-sm" name="qty" value="{{ item.quantity }}" readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text plus form-control-sm">+</span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-10 text-lg-center">
+                            <span class="cart-item-price item-total-price-{{ item.product_id }}">{{ item.cost }}</span> <i class="fas fa-ruble-sign"></i>
+                        </div> 
+                        <div class="col-lg-1 col-md-1 col-2">
+                            <form class="form-remove" method="get" action="{% url 'remove' %}">
+                                <button type="submit" class="close remove-from-cart" data-id="{{ item.product_id }}">&times;</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <form action="{% url 'contact_info' %}" method="POST">
+            {% csrf_token %}
+            <div class="delivery">
+                <h4 class="mt-0">Доставка</h4>
+                {% if delivery == 0 %}
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1" name="delivery" value="0" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="customRadio1">Самовывоз <small>(<span>{{ delivery_address }}</span>)</small></label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio2" name="delivery" value="1" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio2">Доставка курьером</label>
+                    </div>
+                {% else %}
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio1" name="delivery" value="0" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio1">Самовывоз <small>(<span>{{ delivery_address }}</span>)</small></label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio2" name="delivery" value="1" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="customRadio2">Доставка курьером</label>
+                    </div>
+                {% endif %}
+                <h4 class="mt-4">Оплата</h4>
+                {% if payment == 0 %}
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3" name="payment" value="0" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="customRadio3">Наличный расчёт</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio4" name="payment" value="1" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio4">Оплата картой</label>
+                    </div>
+                {% else %}
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio3" name="payment" value="0" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadio3">Наличный расчёт</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="customRadio4" name="payment" value="1" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="customRadio4">Оплата картой</label>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="cart-total text-right mb-3">
+                Итого:<span class="total-price">{{ cart.get_total_price }}</span> <i class="fas fa-ruble-sign"></i>
+            </div>
+            {% if user.is_authenticated %}
+                {% if cart_len %}
+                    <div class="d-flex justify-content-end"><button type="submit" class="btn btn-primary">продолжить<i class="fas fa-chevron-right fa-sm i-post"></i></button></div>
+                {% endif %}
+            {% else %}
+                <div class="d-flex justify-content-end"><a href="{% url 'signup' %}" class="btn btn-primary">Для продолжения необходимо зарегистрироваться<i class="fas fa-chevron-right fa-sm i-post"></i></a></div>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}

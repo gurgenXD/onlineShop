@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+{% load l10n %}
+
+
+{% block title %}
+    {{ subcategory.name }}
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'catalog' %}">Товары</a></li>
+                <li class="breadcrumb-item"><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+                <li class="breadcrumb-item active">{{ subcategory.name }}</li>
+            </ol>
+            <h1 class="page-header">{{ subcategory.name }}<small class="text-muted">{{ products_len }} товаров</small></h1>
+
+            <form class="row" id="cars-filter" action="{{ subcategory.get_absolute_url }}">
+                <div class="col-lg-3">
+                    <a class="list-group-toggler btn btn-primary collapsed text-left d-lg-none" data-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample5">Параметры<i class="fas fa-chevron-up fa-xs"></i></a>
+
+                    <div class="collapse d-lg-block" id="multiCollapseExample5">
+                            <div class="for-car text-center">
+                                <h3 class="text-left">Автомобиль</h3>
+                                <div class="form-group">
+                                    <select name="cars-brand" id="cars-brand" class="form-control form-control-sm">
+                                        <option value="">Марка авто</option>
+                                        {% for brand in cars_brands %}
+                                            {% if car_brand == brand %}
+                                                <option value="{{ brand.id }}" selected>{{ brand.name }}</option>
+                                            {% else %}
+                                                <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <select name="cars-name" id="cars-name" class="form-control form-control-sm">
+                                        <option value="">Модель</option>
+                                        {% for car_item in cars_models %}
+                                            {% if car_item == car_model %}
+                                                <option value="{{ car_item.id }}" selected>{{ car_item.name }}</option>
+                                            {% else %}
+                                                <option value="{{ car_item.id }}">{{ car_item.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <select name="cars-date" id="cars-date" class="form-control form-control-sm">
+                                        <option value="">Год выпуска</option>
+                                        {% for car in cars %}
+                                            {% if car.release_date == release_date %}
+                                                <option value="{{ car.id }}" selected>{{ car.release_date|unlocalize }}</option>
+                                            {% else %}
+                                                <option value="{{ car.id }}">{{ car.release_date|unlocalize }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <button type="submit" id="cars-submit" class="btn btn-outline-dark btn-sm" >применить</button>
+                            </div>
+                            
+                            <ul class="list-group">
+                                <li class="list-group-item" aria-disabled="true">
+                                    <a class="list-group-toggler collapsed" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Цена<i class="fas fa-chevron-up fa-xs"></i></a>
+
+                                    <div class="collapse multi-collapse" id="multiCollapseExample1">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <input type="text" class="form-control form-control-sm val_price" name="min_price" value="{{ min_price|unlocalize }}">
+                                            <span>&nbsp;-&nbsp;</span>
+                                            <input type="text" class="form-control form-control-sm val_price" name="max_price" value="{{ max_price|unlocalize }}">
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item" aria-disabled="true">
+                                    <a class="list-group-toggler collapsed" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample2">Производитель<i class="fas fa-chevron-up fa-xs"></i></a>
+
+                                    <div class="collapse multi-collapse" id="multiCollapseExample2">
+                                        {% for manufacturer in manufacturers %}
+                                            <div class="custom-control custom-checkbox">
+                                                {% if manufacturer in manuf_checked %}
+                                                    <input type="checkbox" checked class="custom-control-input manufacturer" name="{{ manufacturer.slug }}"  id="customControlInline{{ manufacturer.id }}">
+                                                {% else %}
+                                                    <input type="checkbox" class="custom-control-input manufacturer" name="{{ manufacturer.slug }}"  id="customControlInline{{ manufacturer.id }}">
+                                                {% endif %}
+                                                <label class="custom-control-label" for="customControlInline{{ manufacturer.id }}">{{ manufacturer.name }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+
+                            </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="form-inline sort-select">
+                        <div class="form-group">
+                            <select name="sort-products" id="sort-products" class="form-control form-control-sm" id="exampleFormControlSelect3">
+                                {% if sort_products == '1' or sort_products == None %}
+                                    <option value="1" selected>По популярности</option>
+                                    <option value="2">По возрастанию цены</option>
+                                    <option value="3">По убыванию цены</option>
+                                {% elif sort_products == '2' %}
+                                    <option value="1">По популярности</option>
+                                    <option value="2" selected>По возрастанию цены</option>
+                                    <option value="3">По убыванию цены</option>
+                                {% elif sort_products == '3' %}
+                                    <option value="1">По популярности</option>
+                                    <option value="2">По возрастанию цены</option>
+                                    <option value="3" selected>По убыванию цены</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    {% for product in page_object.object_list %}
+                        <div class="media catalogue-item">
+                            <a href="{{ product.get_absolute_url }}" title="">
+                                <img src="{{  product.get_main_image.image.url|resize:'160x160,C' }}" class="mr-4 align-self-center" alt="...">
+                            </a>
+                            <div class="media-body align-self-center d-flex justify-content-between">
+                                <div  class="mr-4">
+                                    <h3><a href="{{ product.get_absolute_url }}" title="">{{ product.name }}</a></h3>
+                                    {% for feature_value in product.feature_values.all %}
+                                        {{ feature_value.value }},
+                                    {% endfor %}
+                                </div>
+                                <div class="price">
+                                    {{ product.price }} <i class="fas fa-ruble-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    {% if is_paginated %}
+                        <div class="d-flex justify-content-center">
+                            <ul class="pagination">
+                                <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                                    <a class="page-link" href="{{ prev_url }}">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
+                                {% if page_object.number|add:'-3' in page_object.paginator.page_range %}
+                                    <li class="page-item"><a class="page-link" href="{{ request_get_string }}&page=1">1</a></li>
+                                {% endif %}
+                                {% if page_object.number|add:'-4' in page_object.paginator.page_range %}
+                                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                {% endif %}
+                                {% for n in page_object.paginator.page_range %}
+                                    {% if page_object.number == n %}
+                                        <li class="page-item active"><a class="page-link" href="{{ request_get_string }}&page={{ n }}">{{ n }}</a></li>
+                                    {% elif n > page_object.number|add:'-3' and n < page_object.number|add:'3' %}
+                                        <li class="page-item"><a class="page-link" href="{{ request_get_string }}&page={{ n }}">{{ n }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_object.number|add:'4' in page_object.paginator.page_range %}
+                                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                {% endif %}
+                                {% if page_object.number|add:'3' in page_object.paginator.page_range %}
+                                    <li class="page-item"><a class="page-link" href="{{ request_get_string }}&page={{ page_object.paginator.num_pages }}">{{ page_object.paginator.num_pages }}</a></li>
+                                {% endif %}
+                                <li class="page-item {% if not next_url %} disabled {% endif %}">
+                                    <a class="page-link" href="{{ next_url }}">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </form>
+    </div>
+
+{% endblock %}

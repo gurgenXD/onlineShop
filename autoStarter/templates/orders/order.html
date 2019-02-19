@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+
+
+{% block title %}
+    Корзина
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class="mt-0">Корзина</h1>
+
+        <div class="cart-step">
+            <label>1</label>
+            <span>Состав заказа</span>
+        </div>
+
+        <div class="cart-step">
+            <label>2</label>
+            <span>Контактная информация</span>
+        </div>
+
+        <div class="cart-step active">
+            <label>3</label>
+            <span>Финал</span>
+        </div>
+
+
+        <div class="cart-items mt-4">
+            {% for item in cart %}
+                <div class="cart-item cart-item-{{ item.product_id }}">
+                    <div class="row d-flex justify-content-start align-items-center">
+                        <div class="col-lg-1">
+                            <a href="{{ item.product_get_absolute_url }}" title=""><img width="64" src="{{ item.product_image_url|resize:'64x64,C' }}"></a>
+                        </div>
+                        <div class="col-lg-4">
+                            <a href="{{ item.product_get_absolute_url }}" title="" class="cart-item-name">
+                                    {{ item.product_name }}
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 text-lg-center">
+                            <span class="cart-item-price">{{ item.price }}</span> <i class="fas fa-ruble-sign"></i>
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-6 text-lg-center">
+                            <span class="cart-item-count">{{ item.quantity }} шт</span>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-10 text-lg-center">
+                            <span class="cart-item-price item-total-price-{{ item.product_id }}">{{ item.cost }}</span> <i class="fas fa-ruble-sign"></i>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-2">
+                            <form class="form-remove" method="get" action="{% url 'remove' %}">
+                                <button type="submit" class="close remove-from-cart" data-id="{{ item.product_id }}">&times;</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <form action="{% url 'order_submit' %}" method="POST">
+            {% csrf_token %}
+            <div class="delivery">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h4 class="mt-2">Доставка</h4>
+                        {{ delivery.name }}
+                        {% if delivery.address != ''  %}
+                            <small>(<span>{{ delivery.address }}</span>)</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h4 class="mt-2">Оплата</h4>
+                        {{ payment.name }}
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-lg-6">
+                        <b>Получатель</b>
+                        <p>{{ user.profile.full_name }}</p>
+                        <b>Контактный телефон</b>
+                        <p>{{ user.profile.phone }}</p>
+                        <b>Почтовый индекс</b>
+                        <p>{{ user.profile.postcode }}</p>
+                        <b>Страна</b>
+                        <p>{{ user.profile.country }}</p>
+                        <b>Регион</b>
+                        <p>{{ user.profile.region }}</p>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <b>Населённый пункт</b>
+                        <p>{{ user.profile.locality }}</p>
+                        <b>Улица</b>
+                        <p>{{ user.profile.street }}</p>
+                        <b>Номер дома</b>
+                        <p>{{ user.profile.house_nmb }}</p>
+                        {% if user.profile.apartment_nmb %}
+                            <b>Номер квартиры</b>
+                            <p>{{ user.profile.apartment_nmb }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            <div class="cart-total text-right mb-3">
+                Итого:<span class="total-price">{{ cart.get_total_price }}</span> <i class="fas fa-ruble-sign"></i>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-dark" href="{% url 'contact_info' %}" role="button"><i class="fas fa-chevron-left fa-sm i-pre"></i>назад</a>
+
+                <a class="btn btn-primary" href="{% url 'order_submit' %}" role="button">Отправить заказ<i class="fas fa-chevron-right fa-sm i-post"></i></a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

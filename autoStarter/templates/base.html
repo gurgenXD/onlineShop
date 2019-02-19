@@ -1,0 +1,263 @@
+{% load static %}
+
+{% load flatpages %}
+{% get_flatpages as flatpages %}
+
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" href="{% static 'favicon.png' %}">
+
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/smartphoto.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+        <title>
+            {% block title %}{% endblock %} | Автостартер
+        </title>
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-secondary d-none d-lg-block">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        {% for page in flatpages %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ page.url }}">{{ page.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <span class="navbar-text">
+                        <i class="fas fa-phone i-pre fa-sm" style="color:#fecb00;"></i>{{ phone.phone }}
+                    </span>
+                    <span class="navbar-text">
+                        <i class="fab fa-whatsapp i-pre" style="color:#7ad06d;"></i>{{ messenger.number }}
+                    </span>
+
+                    <ul class="navbar-nav ml-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="{% url 'profile' %}">
+                                    <i class="fas fa-user i-pre" style="color:#fecb00;"></i>{{ user.username }}<i class="fas fa-chevron-down fa-xs i-post"></i>
+                                </a>
+                                <div class="dropdown-menu pt-3">
+                                    <a class="dropdown-item" href="{% url 'profile' %}">Профиль</a>
+                                    <a class="dropdown-item" href="{% url 'orders' %}">Заказы</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'signout' %}">Выход</a>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'signin' %}">Вход / Регистрация</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-lg navbar-light sticky mb-3">
+            <div class="container">
+                <button class="navbar-toggler is-mouse-focused" type="button" data-toggle="offcanvas">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'images/logo-header.png' %}" alt="" class="top-logo d-lg-block d-none">
+                    <img src="{% static 'images/logo-scroll.png' %}" alt="" class="scroll-logo d-block d-lg-none">
+                </a>
+                <ul class="navbar-nav cart-mobile d-lg-none">
+                    <li class="nav-item">
+                        <a class="cart-info nav-link have-icon cart-link i-cart mr-0" href="{% url 'cart' %}">{{ cart_len }} | {{ cart.get_total_price }} ₽<!--Корзина--></a>
+                    </li>
+                </ul>
+
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mx-0 mx-xl-4">
+
+                        <li class="nav-item dropdown dropdown-mega">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                                Товары<i class="fas fa-chevron-down fa-xs i-post"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-mega pt-3">
+                                <div class="container">
+                                    <div class="card-columns">
+                                        {% for category in categories %}
+                                            <div class="card">
+                                                <a class="dropdown-item dropdown-item-header" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                                {% for subcategory in category.subcategories.all %}
+                                                    <a class="dropdown-item" href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a>
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'catalog' %}">Услуги</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contacts' %}">Контакты</a>
+                        </li>
+                    </ul>
+
+                    <form class="input-group input-group-sm input-search mx-0 mx-xl-4" action="{% url 'search_products' %}">
+                        <input type="text" name="query" class="form-control is-mouse-focused" value="{{ request.GET.query }}" placeholder="Поиск среди более 7 000 товаров">
+                        <div class="input-group-append">
+                            <button class="btn is-mouse-focused" type="submit"></button>
+                        </div>
+                    </form>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="cart-info nav-link have-icon cart-link i-cart mr-0" href="{% url 'cart' %}">{{ cart_len }} | {{ cart.get_total_price }} ₽<!--Корзина--></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-lg-none offcanvas-collapse">
+                    <div class="container px-0 px-sm-3">
+                        <form class="input-group input-group-sm input-search mx-0 mx-xl-4">
+                            <input type="text" class="form-control is-mouse-focused" placeholder="Поиск среди более 7 000 товаров">
+                            <div class="input-group-append">
+                                <button class="btn is-mouse-focused" type="button"></button>
+                            </div>
+                        </form>
+                        <ul class="navbar-nav mx-auto">
+                            <li class="nav-item">
+                                <span class="nav-link d-flex justify-content-between">
+                                    <a href="tel:89094715825"><i class="fas fa-phone i-pre fa-sm" style="color:#fecb00;"></i>{{ phone.phone }}</a>
+                                    <a href="https://wa.me/79094702111?text=Текст%20стандартного%20сообщения." target="_blank"><i class="fab fa-whatsapp i-pre" style="color:#7ad06d;"></i>{{ messenger.number }}</a>
+                                </span>
+                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="nav-item">
+                                    <span class="nav-link d-flex justify-content-between">
+                                        <a href="{% url 'profile' %}"><i class="fas fa-user i-pre" style="color:#fecb00;"></i>{{ user.username }}</a>
+                                        <a href="{% url 'signout' %}"><i class="fas fa-sign-out-alt i-pre"></i>выход</a>
+                                    </span>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'signin' %}">Вход / Регистрация</a>
+                                </li>
+                            {% endif %}
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'catalog' %}">Товары</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'catalog' %}">Услуги</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'contacts' %}">Контакты</a>
+                            </li>
+
+                            {% for page in flatpages %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ page.url }}">{{ page.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+
+        {% block content %}{% endblock %}
+
+        <div class="scroll-to-top"></div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <p class="footer-company-name">2018 © Интернет магазин стартеров и генераторов - «Автостартер»</p>
+                        <ul class="list-inline list-payments">
+                            <li class="list-inline-item">
+                                <a href="#" title="">
+                                    <img src="{% static 'images/i-p1.png' %}" alt="...">
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" title="">
+                                    <img src="{% static 'images/i-p2.png' %}" alt="...">
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" title="">
+                                    <img src="{% static 'images/i-p3.png' %}" alt="...">
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" title="">
+                                    <img src="{% static 'images/i-p4.png' %}" alt="...">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled">
+                                    {% for page in flatpages %}
+                                        <li><a href="{{ page.url }}" title="">{{ page.title }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled">
+                                    <li><a href="{% url 'catalog' %}" title="">Товары</a></li>
+                                    <li><a href="{% url 'catalog' %}" title="">Услуги</a></li>
+                                    <li><a href="{% url 'contacts' %}" title="">Контакты</a></li>
+                                    <li><a href="{% url 'news' %}" title="">Новости</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a href="#" title="" class="footer-social vk"></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" title="" class="footer-social inst"></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#" title="" class="footer-social odn"></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <a class="devlogo" href="http://wlms.info" target="_blank">
+                            <img src="{% static 'images/devlogo.png' %}" alt="...">
+                            <div class="devlogo-text">
+                                <span>Webline Masters</span>
+                                <span>создание и продвижение сайтов</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+        <!-- Optional JavaScript -->
+        {% block scripts %}
+        {% endblock %}
+    </body>
+</html>

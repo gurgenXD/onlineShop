@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    {{ category.name }}
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalog' %}">Товары</a></li>
+            <li class="breadcrumb-item active">{{ category.name }}</li>
+        </ol>
+        <h1 class="page-header">{{ category.name }}</h1>
+        <div class="card-columns dropdown-menu-mega">
+            <div class="card">
+                {% for subcategory in subcategories %}
+                    <a class="dropdown-item" href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

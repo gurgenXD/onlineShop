@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+
+
+{% block title %}
+    Профиль
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="profile-tab" href="{% url 'profile' %}" role="tab">Профиль</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="historye-tab" href="{% url 'orders' %}" role="tab">История заказов</a>
+            </li>
+        </ul>
+        <div class="tab-content profile-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h2 class="mt-3 mb-3">Настройка профиля</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Ваш e-mail</label>
+                                <input type="email" class="form-control" placeholder="{{ user.email }}" disabled>
+                            </div>
+
+                            <h3 class="mt-5 mb-3">Сменить пароль</h3>
+                            <div class="form-group">
+                                {{ form1.old_password }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form1.new_password1 }}
+                            </div>
+
+                            <div class="form-group">
+                                {{ form1.new_password2 }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" name="user_save">Сохранить</button>
+
+                            {% for field in form1 %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+                                        <strong>Ошибка!</strong> {{ error }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if "user_save" in message.tags %}
+                                        <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+                                            <strong>Успех!</strong> {{ message }}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
+                        </form>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <h2 class="mt-3 mb-3">Адрес доставки</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Получатель</label>
+                                        {{ form2.full_name }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Контактный телефон</label>
+                                        {{ form2.phone }}
+                                    </div>  
+                                    <div class="form-group">
+                                        <label>Почтовый индекс</label>
+                                        {{ form2.postcode }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Страна</label>
+                                        {{ form2.country }}
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Регион</label>
+                                        {{ form2.region }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Населённый пункт</label>
+                                        {{ form2.locality }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Улица</label>
+                                        {{ form2.street }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Номер дома</label>
+                                        {{ form2.house_nmb }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Номер квартиры</label>
+                                        {{ form2.apartment_nmb }}
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary" name="profile_save">Сохранить</button>
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            {% if "profile_save" in message.tags %}
+                                                <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+                                                    <strong>Успех!</strong> {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+{% endblock %}

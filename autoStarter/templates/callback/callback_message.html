@@ -1,0 +1,11 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новый звонок.
+    
+    Информация о звонке:
+
+    Звонок № {{ callback.id }}
+    Позвонить по номеру: {{ callback.phone }}
+    Cегодня в {{ callback.call_time }}
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

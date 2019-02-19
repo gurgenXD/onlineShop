@@ -1,0 +1,12 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новая заявка.
+    
+    Информация о заявке:
+
+    Заявка № {{ feedback.id }}
+    Телефон или почта: {{ feedback.phone_or_email }}
+    Имя: {{ feedback.name }}
+    Сообщение: {{ feedback.message }}
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

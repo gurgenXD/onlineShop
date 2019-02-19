@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+
+
+{% block title %}
+    Профиль
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" href="{% url 'profile' %}" role="tab">Профиль</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="historye-tab" href="{% url 'orders' %}" role="tab">История заказов</a>
+            </li>
+        </ul>
+        <div class="tab-content profile-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="history" role="tabpanel">
+                {% for order in page_object.object_list %}
+                    <div class="order">
+                        <div class="total">
+                            <div class="row d-flex justify-content-start align-items-center">
+                                <div class="col-lg-9 order-total-name">
+                                    Заказ № {{ order.id }} / {{ order.created|date:"d.m.Y" }}
+                                </div>
+
+                                <div class="col-lg-3 text-lg-center order-total-price">
+                                    {{ order.total_price }}<i class="fas fa-ruble-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                        {% for order_item in order.items.all %}
+                            <div class="cart-item">
+                                <div class="row d-flex justify-content-start align-items-center">
+                                    <div class="col-lg-1">
+                                        <a href="{{ order_item.product.get_absolute_url }}" title=""><img src="{{ order_item.product.get_main_image.image.url|resize:'64x64,C' }}"></a>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <a href="{{ order_item.product.get_absolute_url }}" title="" class="cart-item-name">
+                                            {{ order_item.product.name }}
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 text-lg-center">
+                                        <span class="cart-item-price">{{ order_item.price }}<i class="fas fa-ruble-sign"></i></span>
+                                    </div>
+                                    <div class="col-lg-1 col-md-2 text-lg-center">
+                                        <span class="cart-item-count">{{ order_item.quantity }} шт</span>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 text-lg-center">
+                                        <span class="cart-item-price">{{ order_item.total_price }}<i class="fas fa-ruble-sign"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {% if is_paginated %}
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                                <a class="page-link" href="{{ prev_url }}">
+                                    <span>&laquo;</span>
+                                </a>
+                            </li>
+                            {% if page_object.number|add:'-3' in page_object.paginator.page_range %}
+                                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                            {% endif %}
+                            {% if page_object.number|add:'-4' in page_object.paginator.page_range %}
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                            {% endif %}
+                            {% for n in page_object.paginator.page_range %}
+                                {% if page_object.number == n %}
+                                    <li class="page-item active"><a class="page-link" href="?page={{ n }}">{{ n }}</a></li>
+                                {% elif n > page_object.number|add:'-3' and n < page_object.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ n }}">{{ n }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_object.number|add:'4' in page_object.paginator.page_range %}
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                            {% endif %}
+                            {% if page_object.number|add:'3' in page_object.paginator.page_range %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_object.paginator.num_pages }}">{{ page_object.paginator.num_pages }}</a></li>
+                            {% endif %}
+                            <li class="page-item {% if not next_url %} disabled {% endif %}">
+                                <a class="page-link" href="{{ next_url }}">
+                                    <span>&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>  
+{% endblock %}

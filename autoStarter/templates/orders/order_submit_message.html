@@ -1,0 +1,32 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новый заказ.
+    
+    Информация о заказе:
+
+    Заказ № {{ order.id }}
+    Дата/Время: {{ order.created }}
+
+    Пользователь: {{ order.user }}
+    ФИО: {{ order.full_name }}
+    E-mail: {{ order.email }}
+    Телефон: {{ order.phone }}
+    Индекс: {{ order.postcode }}
+    Страна: {{ order.country }}
+    Регион: {{ order.region }}
+    Населенный пункт: {{ order.locality }}
+    Улица: {{ order.street }}
+    Номер дома: {{ order.house_nmb }}
+    Номер квартиры: {{ order.apartment_nmb }}
+    Способ доставки: {{ order.delivery.name }}
+    Способ оплаты: {{ order.payment.name }}
+    Комментарий: {{ order.comment }}
+
+    Товары в заказе:
+    {% for item in order.items.all %}
+        {{ item.product.name }} | {{ item.price }} руб. | {{ item.quantity }} шт. | {{ item.total_price }} руб.
+    {% endfor %}
+
+    Итог: {{ order.total_price }} руб.
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load imagefit %}
+
+
+{% block title %}
+
+    {{ product.name }}
+    
+{% endblock %}
+
+
+{% block scripts %}
+
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
+
+    <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+    <script src="//yastatic.net/share2/share.js"></script>
+    <script src="{% static 'js/jquery-smartphoto.min.js' %}"></script>
+    <script src="{% static 'js/stickyfill.min.js' %}"></script>
+    <script src="{% static 'js/focus-fix.jquery.js' %}"></script>
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalog' %}">Товары</a></li>
+            <li class="breadcrumb-item"><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ subcategory.get_absolute_url }}">{{ subcategory.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="slider slider-for">
+                    {% for image in images %}
+                        <div>
+                            <a href="{{ image.image.url }}" class="zoom-image">
+                                <img src="{{ image.image.url|resize:'684x684,C' }}" class="w-100" alt="...">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="slider slider-nav">
+                    {% for image in images %}
+                        <div>
+                            <img src="{{ image.image.url|resize:'130x130,C' }}" class="w-100" alt="...">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <h1 class="catalogue-item-header">{{ product.name }}</h1>
+                <div class="catalogue-item-price">{{ product.price }} <i class="fas fa-ruble-sign"></i></div>
+                <div class="catalogue-item-old-price"><del>{{ product.price_without_sale }} <i class="fas fa-ruble-sign"></i></del></div>
+                
+                {% if product.stock > 0 %}
+                    <form class="qty form-add" action="{% url 'add' %}">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text minus form-control-sm">-</span>
+                            </div>
+                            <input type="number" min="1" max="{{ product.stock }}" class="count form-control form-control-sm" name="qty" value="1" readonly>
+                            <div class="input-group-append">
+                                <span class="input-group-text plus form-control-sm">+</span>
+                            </div>
+                        </div>
+                        {% if product_in_cart %}
+                            <a href="{% url 'cart' %}" class="btn btn-primary align-self-center btn-outline-primary btn-lg btn-buy mt-3 in-cart"><i class="fa fa-shopping-cart fa-xs i-pre"></i>в корзине</a>
+                            <button type="submit" class="btn btn-primary align-self-center btn-lg btn-buy mt-3 add-to-cart" data-id="{{ product.id }}" style="display:none"><i class="fa fa-shopping-cart fa-xs i-pre"></i>купить</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary align-self-center btn-lg btn-buy mt-3 add-to-cart" data-id="{{ product.id }}"><i class="fa fa-shopping-cart fa-xs i-pre"></i>купить</button>
+                            <a href="{% url 'cart' %}" class="btn btn-primary align-self-center btn-outline-primary btn-lg btn-buy mt-3 in-cart" style="display:none"><i class="fa fa-shopping-cart fa-xs i-pre"></i>в корзине</a>
+                        {% endif %}
+                    </form>
+
+                    <a class="btn btn-primary align-self-center btn-outline-primary btn-lg btn-buy mb-5" role="button" data-toggle="modal" data-target="#exampleModal">купить в 1 клик</a>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Быстрая покупка</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="order_one_click" action="{% url 'order_one_click' %}">
+                                        <div class="form-group">
+                                            <input type="text" id="user_name" class="form-control form-control-sm" placeholder="Ваше имя">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="text" id="user_phone" class="form-control form-control-sm phone-input" placeholder="Контактный телефон">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <textarea rows="5" id="user_comment" class="form-control form-control-sm" placeholder="Комментарий к заказу"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary btn-block one_click_submit" data-id="{{ product.id }}">Отправить заказ</button>
+
+                                        <div class="alert alert-success d-none" role="alert">
+                                            <i class="fas fa-check-circle fa-3x"></i>
+                                            <h5>Спасибо за заказ!</h5>
+                                            <p>Ожидайте звонок менеджера.</p>
+                                        </div>
+                                        
+                                        <div class="alert alert-danger d-none" role="alert">
+                                            <i class="fas fa-exclamation-circle fa-3x"></i>
+                                            <h5>Ошибка при отправке</h5>
+                                            <p>Мы не получили Вашу заявку. Повторите попытку позже.</p>
+                                        </div>
+                                       
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="input-group">
+                        <span class="input-group-text mb-4">Нет в наличии</span>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-start">
+                    <span class="share-span">Поделиться:</span>
+                    <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,twitter,viber,whatsapp,skype,telegram" data-limit="3">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs options-nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="tab11" data-toggle="tab" href="#tab1" role="tab">Характеристики</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab12" data-toggle="tab" href="#tab2" role="tab">Описание</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="tab13" data-toggle="tab" href="#tab3" role="tab">Список автомобилей</a>
+            </li>
+        </ul>
+        <div class="tab-content options-tab" id="myTabContent">
+            <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                <h2>{{ product.name }}</h2>
+                <div class="row option-row">
+                    <div class="col-lg-6">
+                        <span class="option-name">Производитель</span>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <span class="option-value">{{ product.manufacturer.name }}</span>
+                    </div>
+                </div>
+                {% for feature_value in product.feature_values.all %}
+                    <div class="row option-row">
+                        <div class="col-lg-6">
+                            <span class="option-name">{{ feature_value.feature.name }}</span>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <span class="option-value">{{ feature_value.value|safe }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+            <div class="tab-pane fade" id="tab2" role="tabpanel">
+                {{ product.description|safe }}
+            </div>
+            <div class="tab-pane fade" id="tab3" role="tabpanel">
+                {{ product.cars_list }}
+            </div>
+        </div>
+    </div>
+
+    <div class="other-block">
+        <div class="container">
+            <h2 class="mt-0 mb-4">Сопутствующие товары</h2>
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <a href="catalogue-item.html" class="other-item text-center">
+                        <img src="{% static 'images/o.jpg' %}" alt="" class="img-fluid">
+                        <div class="other-item-caption text-left">
+                            <p>804<i class="fas fa-ruble-sign"></i></p>
+                            <h3>Выпрямитель генератора «СтартВОЛЬТ» 14В 150А</h3>
+                        </div>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,2 @@
+/* focus-fix | https://github.com/wilddeer/focus-fix/ | CC0 */
+(function(){var mouseFocusedClass='is-mouse-focused';$(document.body).on('mousedown',function(){setTimeout(function(){var activeElement=document.activeElement,$activeElement=$(activeElement);if(activeElement&&activeElement!==document.body){$activeElement.addClass(mouseFocusedClass).one('blur',function(){$activeElement.removeClass(mouseFocusedClass)})}},0)})})()
