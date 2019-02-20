@@ -204,27 +204,27 @@ def order_one_click(request):
     price = product.price
     total_price = quantity * price
 
-    order = Order.objects.create(
-        total_price = total_price,
-        full_name = request.GET.get('user_name'),
-        phone = request.GET.get('user_phone'),
-        comment = request.GET.get('user_comment'),
-        status_delivery = status_delivery,
-        status_payment = status_payment,
-    )
-
-    orderitem = OrderItem.objects.create(
-        order=order,
-        product=product,
-        price=price,
-        quantity=quantity,
-        total_price=total_price
-    )
-    
-    product.save()
-
     try:
         alert_success = True
+        order = Order.objects.create(
+            total_price = total_price,
+            full_name = request.GET.get('user_name'),
+            phone = request.GET.get('user_phone'),
+            comment = request.GET.get('user_comment'),
+            status_delivery = status_delivery,
+            status_payment = status_payment,
+        )
+
+        orderitem = OrderItem.objects.create(
+            order=order,
+            product=product,
+            price=price,
+            quantity=quantity,
+            total_price=total_price
+        )
+        
+        product.save()
+
         current_site = get_current_site(request)
         mail_subject = 'Новый заказ на сайте: ' + current_site.domain
         message = render_to_string('orders/order_submit_message.html', {
