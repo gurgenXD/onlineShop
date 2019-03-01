@@ -36,12 +36,9 @@ class Order(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
     def save(self, *args, **kwargs):
-        if self.status_payment.id != 1 and not self.saved:
+        if self.status_payment.id != 1 and self.saved == False:
             for item in self.items.all():
-                if item.product.stock < item.quantity:
-                    item.product.stock = 0
-                else:
-                    item.product.stock -= item.quantity
+                item.product.stock -= item.quantity
                 item.product.save()
                 self.saved = True
         super(Order, self).save(*args, **kwargs)
@@ -65,7 +62,7 @@ class OrderItem(models.Model):
         return self.price * self.quantity
     
     def save(self, *args, **kwargs):
-        if self.order.status_payment != 1:   
+        if self.order.status_payment.id != 1:   
             self.product.stock -= self.quantity
             self.product.save()
         super(OrderItem, self).save(*args, **kwargs)

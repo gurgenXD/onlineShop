@@ -223,8 +223,6 @@ def order_one_click(request):
             total_price=total_price
         )
         
-        product.save()
-
         current_site = get_current_site(request)
         mail_subject = 'Новый заказ на сайте: ' + current_site.domain
         message = render_to_string('orders/order_submit_message.html', {

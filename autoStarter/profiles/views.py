@@ -126,18 +126,22 @@ def signup(request):
             user.set_password(password)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Подтверждение почты'
-            message = render_to_string('profiles/account_activate_message.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                'token': account_activation_token.make_token(user),
-            })
-            to_email = form.cleaned_data['email']
-            email = EmailMessage(mail_subject, message, to=[to_email])
-            email.send()
-            return render(request, 'profiles/account_activate_done.html')
+            try:
+                current_site = get_current_site(request)
+                mail_subject = 'Подтверждение почты'
+                message = render_to_string('profiles/account_activate_message.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                    'token': account_activation_token.make_token(user),
+                })
+                to_email = form.cleaned_data['email']
+                email = EmailMessage(mail_subject, message, to=[to_email])
+                email.send()
+                return render(request, 'profiles/account_activate_done.html')
+            except:
+                return render(request, 'profiles/account_activate_mail_error.html')
+
     else:
         form = SignUpForm()
 

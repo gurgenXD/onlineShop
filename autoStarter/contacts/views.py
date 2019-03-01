@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from contacts.models import Phone, Messenger, Schedule, Email, Address, SocialLink
+from feedback.forms import FeedBackForm
 
 
 def contacts(request):
@@ -10,6 +11,7 @@ def contacts(request):
     emails = Email.objects.all()
     addresses = Address.objects.all()
 
+    form = FeedBackForm()
 
     context = {
         'phones': phones,
@@ -18,6 +20,7 @@ def contacts(request):
         'schedule': schedule,
         'emails': emails,
         'addresses': addresses,
+        'form': form,
     }
 
     return render(request, 'contacts/contacts.html', context)

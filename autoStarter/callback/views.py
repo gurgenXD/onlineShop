@@ -14,6 +14,13 @@ def callback(request):
         phone = request.POST.get('phone_number')
         call_time = request.POST.get('time_to_callback')
 
+        if phone == '':
+            alert_success = False
+            context = {
+                'alert_success': alert_success,
+            }
+            return JsonResponse(context)
+
         if call_time == '':
             call_time = datetime.now().time().strftime('%H:%M') 
         else:

@@ -136,10 +136,8 @@ $(document).ready(function(){
         }
         num_count.val(nmb.toString());
     });
-});
 
 //ADD TO CART
-$(document).ready(function(){
 	$('.add-to-cart').click(function(e) {
 		e.preventDefault();
         product_id = $(this).attr('data-id');
@@ -159,10 +157,8 @@ $(document).ready(function(){
 			}
 		});
     });
-});
 
 //REMOVE FROM CART
-$(document).ready(function(){
     $('.remove-from-cart').click(function(e) {
         e.preventDefault();
 		product_id = $(this).attr('data-id');
@@ -180,10 +176,8 @@ $(document).ready(function(){
         	}
         });
     });
-});
 
 //CHANGE QUATITY
-$(document).ready(function(){
     $('.form-quantity .minus').click(function() {
         num_count = $(this).parent(".input-group-prepend").siblings('.count');
         nmb = parseInt(num_count.val());
@@ -214,9 +208,7 @@ $(document).ready(function(){
             }
         });
     });
-});
 
-$(document).ready(function(){
 	$('.form-quantity .plus').click(function() {
 		num_count = $(this).parent(".input-group-append").siblings('.count');
 		nmb = parseInt(num_count.val());
@@ -245,9 +237,7 @@ $(document).ready(function(){
 			}
 		});
     });
-});
 
-$(document).ready(function(){
 	$('.one_click_submit').click(function(e) {
         e.preventDefault();
         product_id = $(this).attr('data-id');
@@ -279,9 +269,7 @@ $(document).ready(function(){
 			}
 		});
     });
-});
-
-$(document).ready(function(){
+    
 	$('#callback-form .callback-submit').click(function(e) {
         e.preventDefault();
         csrf_token = $('#callback-form [name="csrfmiddlewaretoken"]').val();
@@ -309,22 +297,21 @@ $(document).ready(function(){
 			}
 		});
     });
-});
 
-
-$(document).ready(function(){
 	$('#feedback-form .feedback-submit').click(function(e) {
         e.preventDefault();
         csrf_token = $('#feedback-form [name="csrfmiddlewaretoken"]').val();
         phone_or_email = $('#feedback-form .phone_or_email').val();
-        sub_name = $('#feedback-form .sub_name').val();
-        sub_message = $('#feedback-form .sub_message').val();
+        name = $('#feedback-form .sub_name').val();
+        message = $('#feedback-form .sub_message').val();
+        recaptcha_response = $('#feedback-form [name="g-recaptcha-response"]').val();
         
 		data = {
             "csrfmiddlewaretoken": csrf_token,
             phone_or_email: phone_or_email,
-            sub_name: sub_name,
-            sub_message: sub_message,
+            name: name,
+            message: message,
+            'g-recaptcha-response': recaptcha_response,
         }
 
 		$.ajax({
@@ -343,45 +330,27 @@ $(document).ready(function(){
 			}
 		});
     });
-});
-
-
-$(document).ready(function(){
+    
 	$('#sort-products').change(function() {
         $('#cars-filter').submit();
     });
-});
-
-
-$(document).ready(function(){
+    
 	$('#cars-brand').change(function() {
         $('#cars-filter').submit();
     });
-});
-
-
-$(document).ready(function(){
+    
 	$('#cars-name').change(function() {
         $('#cars-filter').submit();
     });
-});
-
-
-$(document).ready(function(){
+    
 	$('#cars-date').change(function() {
         $('#cars-filter').submit();
     });
-});
-
-
-$(document).ready(function(){
+    
     $('.val_price').on('blur', function() {
         $('#cars-filter').submit();
     });
-});
-
-
-$(document).ready(function(){
+    
     $('.manufacturer').change(function() {
         $('#cars-filter').submit();
     });
