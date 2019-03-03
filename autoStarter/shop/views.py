@@ -147,6 +147,12 @@ def product(request, category_slug, subcategory_slug, product_slug):
     subcategory = get_object_or_404(SubCategory, slug=subcategory_slug)
     product = get_object_or_404(Product, slug=product_slug, is_active=True)
     images = get_list_or_404(Image, product=product)
+    cars = Car.objects.filter(products__in=[product])
+    similar = Product.objects.filter(is_active=True)
+    similar = similar.filter(Q(cars__in=cars)|Q(subcategory=subcategory)|Q(category=category)).distinct()
+    similar = similar.exclude(name=product.name)
+    if len(similar) > 8:
+        similar = similar[:8]
 
     if str(product.id) in cart.cart:
         product_in_cart = True
@@ -159,6 +165,7 @@ def product(request, category_slug, subcategory_slug, product_slug):
         'product': product,
         'images': images,
         'product_in_cart': product_in_cart,
+        'similar': similar,
     }
 
     return render(request, 'shop/product_detail.html', context)

@@ -15,7 +15,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=250, verbose_name='Slug', unique=True, null=True, blank=True)
     description = models.TextField(verbose_name='Описание')
     cars_list = models.TextField(verbose_name='Список автомобилей')
-    cars = models.ManyToManyField('Car', verbose_name='Автомобили', blank=True)
+    cars = models.ManyToManyField('Car', verbose_name='Автомобили', blank=True, related_name='products')
     stock = models.PositiveIntegerField(default=0, verbose_name='На складе')
     is_active = models.BooleanField(default=True, verbose_name='Активно')
     purchased = models.PositiveIntegerField(default=0, verbose_name='Куплено')
