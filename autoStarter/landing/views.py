@@ -4,6 +4,7 @@ from partners.models import Partner
 from brands.models import Brand
 from news.models import News
 from shop.models import Category
+from slider.models import Slide
 
 
 def index(request):
@@ -17,6 +18,9 @@ def index(request):
     partners = Partner.objects.all()
     brands = Brand.objects.all()
 
+    slides = Slide.objects.all()
+    slide_first = slides.first()
+    
     last_news = News.objects.filter(published=True).order_by('-pk')[:2]
     
     context = {
@@ -29,6 +33,8 @@ def index(request):
         'partners': partners,
         'brands': brands,
         'last_news': last_news,
+        'slides': slides,
+        'slide_first': slide_first,
     }
 
     return render(request, 'landing/index.html', context)

@@ -33,21 +33,15 @@
                     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
                 </ol>
                 <div class="carousel-inner">
-                    <div class="carousel-item active" style="background-image: url(../static/images/slide-1.png);">
-                        <div class="carousel-caption">
-                            <h3>Ремонт стартеров и генераторов</h3>
-                            <p>Наша фирма осуществляет ремонт стартеров и генераторов для легковых, грузовых, коммерческих автомобилей, автобусов, а так же спецтехники иностранного и отечественного производства.</p>
-                            <a class="btn btn-primary" href="{% url 'catalog' %}" role="button">все услуги<i class="fas fa-chevron-right fa-sm i-post"></i></a>
+                    {% for slide in slides %}
+                        <div class="carousel-item {% if slide == slide_first %}active{% endif %}" style="background-image: url(../static/images/slide-1.png);">
+                            <div class="carousel-caption">
+                                <h3>{{ slide.title }}</h3>
+                                <p>{{ slide.text }}</p>
+                                <a class="btn btn-primary" href="{{ slide.button_url }}" role="button">{{ slide.button_text }}<i class="fas fa-chevron-right fa-sm i-post"></i></a>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="carousel-item" style="background-image: url(../static/images/slide-1.png);">
-                        <div class="carousel-caption">
-                            <h3>Ремонт стартеров и генераторов</h3>
-                            <p>Наша фирма осуществляет ремонт стартеров и генераторов для легковых, грузовых, коммерческих автомобилей, автобусов, а так же спецтехники иностранного и отечественного производства.</p>
-                            <a class="btn btn-primary" href="{% url 'catalog' %}" role="button">все товары<i class="fas fa-chevron-right fa-sm i-post"></i></a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
 
                 <ul class="list-inline carousel-features">

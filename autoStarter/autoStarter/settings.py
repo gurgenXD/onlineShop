@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'static_strings',
     'orders',
     'profiles',
+    'slider',
 ]
 
 MIDDLEWARE = [
