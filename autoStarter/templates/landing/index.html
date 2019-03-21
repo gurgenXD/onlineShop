@@ -45,18 +45,12 @@
                 </div>
 
                 <ul class="list-inline carousel-features">
-                    <li class="list-inline-item">
-                        <span>> 7 000</span>
-                        товарных позиций
-                    </li>
-                    <li class="list-inline-item">
-                        <span>доставка</span>
-                        по всей России
-                    </li>
-                    <li class="list-inline-item">
-                        <span>гарантия</span>
-                        качества на все товары
-                    </li>
+                    {% for info_block in info_blocks %}
+                        <li class="list-inline-item">
+                            <span>{{ info_block.title }}</span>
+                            {{ info_block.text }}
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -157,67 +151,14 @@
         <div class="container">
             <h2>Почему нас выбирают</h2>
             <div class="row justify-content-center">
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f1.png');"></div>
-                        Ремонт в день обращения
+                {% for pros in proses %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="feature-item">
+                            <div class="feature-image-item" style="background-image: url('{{ pros.image.url }}');"></div>
+                            {{ pros.text }}
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f2.png');"></div>
-                        Гарантия на запчасти до 6 месяцев
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f3.png');"></div>
-                        Возврат товара в течении 14 дней
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f4.png');"></div>
-                        Работа с юридическими лицами
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f5.png');"></div>
-                        Опыт работы 10 лет
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f6.png');"></div>
-                        Комната отдыха для клиентов
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f7.png');"></div>
-                        Консультировние и техподдержка
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f8.png');"></div>
-                        Доставка по городу в течение дня
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f9.png');"></div>
-                        Гибкая система скидок
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="feature-item">
-                        <div class="feature-image-item" style="background-image: url('../static/images/f10.png');"></div>
-                        Оплата банковскими картами
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -269,20 +210,11 @@
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="col-lg-8">
-                    <h1>О компании</h1>
-                    <p>Компания "Автостартер" начала свою работу в 2007г.</p>
-                    <p>Сосредоточив внимание на узком сегменте автомобильных запчастей – ремонте стартеров, генераторов, мы добились значительных успехов в этом бизнесе и продолжаем активно развиваться.</p>
-                    <p>Цели, к которым мы стремимся – это создание максимального ассортимента стартеров, генераторов и комплектующих, а также быстрый и еще более качественный ремонт агрегатов.</p>
-                    <p>Наша фирма осуществляет ремонт стартеров и генераторов для легковых, грузовых, коммерческих автомобилей, автобусов, а так же спецтехники иностранного и отечественного производства.</p>
-                    <p>Мы предлагаем вам товары и услуги высокого качества по очень привлекательным ценам.</p>
-                    <p>На складе компании «Автостартер» постоянно находится более 6000 позиций агрегатов и комплектующих, что покрывает до 90% модельного ряда легковых и грузовых автомобилей, автобусов и спецтехники.</p>
-                    <p>Это позволяет клиентам приобретать необходимый стартер или генератор непосредственно в день обращения. Прямые поставки от производителей и крупных зарубежных поставщиков позволяют поддерживать оптимальные цены и большой ассортимент продукции.</p>
-                    <p>Наша компания рада вам предложить широкий ассортимент автозапчастей: стартеры, генераторы, комплектующие, аккумуляторы, лампы накаливания, реле, клеммы, провода, ремни генераторов, предохранители и др.</p>
-                    <p>Мы не стоим на месте: - постоянно привлекаем новых поставщиков и увеличиваем ассортимент товаров, осваиваем новое оборудовании для ремонта, постоянно совершенствуем качество нашей работы.</p>
+                    {{ main_info.text|safe }}
                 </div>
 
                 <div class="col-lg-4 d-none d-lg-block">
-                    <img src="{% static 'images/main-info-bg.png' %}">
+                    <img src="{{ main_info.image.url }}">
                 </div>
             </div>
         </div>

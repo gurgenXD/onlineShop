@@ -1,4 +1,4 @@
-from shop.models import Category
+from shop.models import Category, Product
 
 
 def getting_categories(request):

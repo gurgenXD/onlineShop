@@ -159,6 +159,12 @@ def product(request, category_slug, subcategory_slug, product_slug):
     else:
         product_in_cart = False
 
+    product_cars = ''
+    for car in cars:
+        product_cars += str(car) + ', '
+    product_cars = product_cars[:-2]
+
+
     context = {
         'category': category,
         'subcategory': subcategory,
@@ -166,6 +172,7 @@ def product(request, category_slug, subcategory_slug, product_slug):
         'images': images,
         'product_in_cart': product_in_cart,
         'similar': similar,
+        'product_cars': product_cars,
     }
 
     return render(request, 'shop/product_detail.html', context)

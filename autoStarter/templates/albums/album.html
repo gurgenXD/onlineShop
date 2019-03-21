@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load imagefit %}
+
+
+{% block title %}
+    {{ awdawdawd }}
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'gallery' %}">Фото</a></li>
+            <li class="breadcrumb-item active">{{ album.title }}</li>
+        </ol>
+        <h1 class="mt-0">{{ album.title }}</h1>
+
+        <div class="row">
+            {% for image in album.images.all %}
+                <div class="col-sm-6 col-lg-4">
+                    <a href="{{ image.image.url }}" class="zoom-image" data-group="article-image-grid">
+                        <img src="{{ image.image.url|resize:'760x400,C' }}" class="w-100" alt="...">
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

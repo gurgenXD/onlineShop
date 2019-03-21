@@ -8,9 +8,9 @@ class OrderItemInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'phone', 'total_price', 'delivery', 'payment', 'created', 'updated']
+    list_display = ['full_name', 'email', 'phone', 'total_price', 'delivery', 'status_delivery', 'payment', 'status_payment', 'created', 'updated']
     extends = ['saved']
-    list_filter = ['created', 'updated']
+    list_filter = ['created', 'updated', 'status_delivery', 'status_payment']
     inlines = [OrderItemInline]
 
 

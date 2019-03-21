@@ -58,6 +58,10 @@ INSTALLED_APPS = [
     'orders',
     'profiles',
     'slider',
+    'info_block',
+    'about_us',
+    'our_pros',
+    'albums',
 ]
 
 MIDDLEWARE = [
