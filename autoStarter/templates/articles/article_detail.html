@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    {{ article.title }} 
+{% endblock %}
+
+
+{% block scripts %}
+    {% include "_scripts.html" %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-left">
+        <div class="col-xl-8 col-lg-10">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'articles' %}">Статьи</a></li>
+                <li class="breadcrumb-item active">{{ article.title }}</li>
+            </ol>
+            <article class="mb-5">
+                <span class="news-item-date">{{ article.created_date|date:"d.m.Y" }}</span>
+                <h1 class="mt-0">{{ article.title }}</h1>
+                {{ article.text|safe }}
+            </article>
+        </div>
+        </div>  
+    </div>
+{% endblock %}

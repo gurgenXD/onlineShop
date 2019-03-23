@@ -19,6 +19,49 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    
+    <script>
+        $(document).ready(function(){
+            var alert_success2 = {{ alert_success2 }};
+            switch (alert_success2) {
+                case 0:
+                    $('#exampleModal3').modal('show');
+                    break;
+                case 2:
+                    $('#exampleModal3').modal('show');
+                    $('#repair-form .alert-success').removeClass('d-none');
+                    $('#repair-form .alert-success').addClass('d-block');
+                    break;
+                case 3:
+                    $('#exampleModal3').modal('show');
+                    $('#repair-form .alert-danger').removeClass('d-none');
+                    $('#repair-form .alert-danger').addClass('d-block');
+                    break;
+                default:
+                    break;
+            }
+
+            var alert_success = {{ alert_success }};
+            switch (alert_success) {
+                case 0:
+                    $('#exampleModal2').modal('show');
+                    break;
+                case 2:
+                    $('#exampleModal2').modal('show');
+                    $('#feedback-form .alert-success').removeClass('d-none');
+                    $('#feedback-form .alert-success').addClass('d-block');
+                    break;
+                case 3:
+                    $('#exampleModal2').modal('show');
+                    $('#feedback-form .alert-danger').removeClass('d-none');
+                    $('#feedback-form .alert-danger').addClass('d-block');
+                    break;
+                default:
+                    break;
+            }
+        });
+    </script>
 {% endblock %}
 
 
@@ -50,6 +93,7 @@
                     </address>
                     <a class="btn btn-primary btn-block" href="#" role="button" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-phone-volume i-pre"></i>заказать звонок</a>
                     <a class="btn btn-primary btn-block" href="#" role="button" data-toggle="modal" data-target="#exampleModal2"><i class="fas fa-comment i-pre"></i>обратная связь</a>
+                    <a class="btn btn-danger btn-block" href="#" role="button" data-toggle="modal" data-target="#exampleModal3"><i class="fas fa-wrench i-pre"></i>Записаться на ремонт</a>
                 </div>
             </div>
         </div>
@@ -105,7 +149,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form  method="POST" id="feedback-form" action="{% url 'feedback' %}">
+                    <form  method="POST" id="feedback-form">
                         {% csrf_token %}
                         <div class="form-group">
                             {{ form.phone_or_email }}
@@ -120,6 +164,13 @@
                         </div>
 
                         <div class="form-group g-recaptcha mb-4" data-sitekey="6LcNnpAUAAAAAFizBV4waAV1Ehe7WBafr1RP6epY"></div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="mb-3 p-2 alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
                         <button type="submit" class="btn btn-primary btn-block feedback-submit">Отправить</button>
                         
@@ -139,4 +190,109 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal3Label">Записаться на ремонт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" novalidate id="repair-form" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Ваше имя</label>
+                                    {{ form2.name }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Ваш телефон</label>
+                                    {{ form2.phone }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Желаемая дата</label>
+                                    {{ form2.repair_date }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Желаемое время</label>
+                                    {{ form2.repair_time }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Марка и модель авто</label>
+                                    {{ form2.car }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Описание проблемы (необязательно)</label>
+                                    {{ form2.description }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="customControlValidation1" required>
+                            <label class="custom-control-label small" for="customControlValidation1">Нажимая кнопку «отправить заявку», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных</label>
+                        </div>
+
+                        <div name='g-recaptcha-response' class="g-recaptcha mb-4" data-sitekey="6LcNnpAUAAAAAFizBV4waAV1Ehe7WBafr1RP6epY"></div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="mb-3 p-2 alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <button class="btn btn-primary repair-submit" type="submit">отправить заявку</button>
+
+                        <div class="alert alert-success d-none" role="alert">
+                            <i class="fas fa-check-circle fa-3x"></i>
+                            <h5>Спасибо за заявку!</h5>
+                            <p>Ожидайте звонка менеджера по указанному Вами телефону</p>
+                        </div>
+
+                        <div class="alert alert-danger d-none" role="alert">
+                            <i class="fas fa-exclamation-circle fa-3x"></i>
+                            <h5>Ошибка при отправке</h5>
+                            <p>Мы не получили Вашу заявку. Повторите попытку позже.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

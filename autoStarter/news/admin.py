@@ -11,7 +11,6 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ['title', 'published', 'created_date']
     list_filter = ['title', 'published', 'created_date']
     list_editable = ['created_date', 'published']
-    prepopulated_fields = {'slug': ('title',)}
 
 
 admin.site.register(News, NewsAdmin)

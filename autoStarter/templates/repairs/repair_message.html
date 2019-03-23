@@ -1,0 +1,16 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новая заявка на ремонт.
+    
+    Информация о заявке:
+
+    Заявка № {{ repair.id }}
+
+    Имя: {{ repair.name }}
+    Телефон: {{ repair.phone }}
+    Дата: {{ repair.repair_date }}
+    Время: {{ repair.repair_time }}
+    Автомобиль: {{ repair.car }}
+    Описание проблемы: {{ repair.description }}
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

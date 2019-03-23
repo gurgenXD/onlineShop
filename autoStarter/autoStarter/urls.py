@@ -22,8 +22,8 @@ urlpatterns = [
     path('contacts/', include('contacts.urls')),
     path('orders/', include('orders.urls')),
     path('callback/', include('callback.urls')),
-    path('feedback/', include('feedback.urls')),
     path('gallery/', include('albums.urls')),
+    path('articles/', include('articles.urls')),
 ]
 
 

@@ -1,8 +1,5 @@
 {% load static %}
 
-{% load flatpages %}
-{% get_flatpages as flatpages %}
-
 <!doctype html>
 <html lang="ru">
     <head>
@@ -25,11 +22,24 @@
             <div class="container">
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav">
-                        {% for page in flatpages %}
+                        {% for point in main_points %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ page.url }}">{{ page.title }}</a>
+                                <a class="nav-link" href="{{ point.point.url }}">{{ point.point.title }}</a>
                             </li>
                         {% endfor %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#">
+                                Компания<i class="fas fa-chevron-down fa-xs i-post"></i>
+                            </a>
+                            <div class="dropdown-menu pt-3" style="left: -1.5rem;">
+                                {% for point in drop_points %}
+                                    <a class="dropdown-item" href="{{ point.point.url }}">{{ point.point.title }}</a>
+                                {% endfor %}
+                                <a class="dropdown-item" href="{% url 'gallery' %}">Фото</a>
+                                <a class="dropdown-item" href="{% url 'news' %}">Новости</a>
+                                <a class="dropdown-item" href="{% url 'articles' %}">Статьи</a>
+                            </div>
+                        </li>
                     </ul>
                     <span class="navbar-text">
                         <i class="fas fa-phone i-pre fa-sm" style="color:#fecb00;"></i>{{ phone.phone }}
@@ -203,28 +213,35 @@
                             </li>
                         </ul>
                     </div>
-
-                    <div class="col-xl-3 col-md-6">
+                    <div class="col-xl-4 col-md-6">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <ul class="list-unstyled">
-                                    {% for page in flatpages %}
-                                        <li><a href="{{ page.url }}" title="">{{ page.title }}</a></li>
+                                    {% for point in main_points %}
+                                        <li><a href="{{ point.point.url }}" title="">{{ point.point.title }}</a></li>
+                                    {% endfor %}
+                                    {% for point in drop_points %}
+                                        <li><a href="{{ point.point.url }}" title="">{{ point.point.title }}</a></li>
                                     {% endfor %}
                                 </ul>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
+                                <ul class="list-unstyled">
+                                    <li><a href="{% url 'gallery' %}" title="">Фото</a></li>
+                                    <li><a href="{% url 'news' %}" title="">Новости</a></li>
+                                    <li><a href="{% url 'articles' %}" title="">Статьи</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-4">
                                 <ul class="list-unstyled">
                                     <li><a href="{% url 'catalog' %}" title="">Товары</a></li>
                                     <li><a href="{% url 'catalog' %}" title="">Услуги</a></li>
                                     <li><a href="{% url 'contacts' %}" title="">Контакты</a></li>
-                                    <li><a href="{% url 'news' %}" title="">Новости</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xl-3 col-md-6">
+                    <div class="col-xl-2 col-md-6">
                         <ul class="list-inline">
                             {% for social_link in social_links %}
                             <li class="list-inline-item">
@@ -233,7 +250,6 @@
                             {% endfor %}
                         </ul>
                     </div>
-
                     <div class="col-xl-3 col-md-6">
                         <a class="devlogo" href="http://wlms.info" target="_blank">
                             <img src="{% static 'images/devlogo.png' %}" alt="...">

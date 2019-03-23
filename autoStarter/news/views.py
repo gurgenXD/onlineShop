@@ -35,8 +35,8 @@ def news(request):
     return render(request, 'news/news.html', context)
 
 
-def news_detail(request, news_slug):
-    one_news = get_object_or_404(News, slug=news_slug)
+def news_detail(request, news_id):
+    one_news = get_object_or_404(News, id=int(news_id))
 
     context = {
         'one_news': one_news,

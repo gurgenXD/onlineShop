@@ -20,6 +20,31 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <script>
+        $(document).ready(function(){
+            var alert_success2 = {{ alert_success2 }};
+            console.log(alert_success2);
+            switch (alert_success2) {
+                case 0:
+                    $('#exampleModal3').modal('show');
+                    break;
+                case 2:
+                    $('#exampleModal3').modal('show');
+                    $('#repair-form .alert-success').removeClass('d-none');
+                    $('#repair-form .alert-success').addClass('d-block');
+                    break;
+                case 3:
+                    $('#exampleModal3').modal('show');
+                    $('#repair-form .alert-danger').removeClass('d-none');
+                    $('#repair-form .alert-danger').addClass('d-block');
+                    break;
+                default:
+                    break;
+            }
+        });
+    </script>
+
 {% endblock %}
 
 
@@ -38,7 +63,8 @@
                             <div class="carousel-caption">
                                 <h3>{{ slide.title }}</h3>
                                 <p>{{ slide.text }}</p>
-                                <a class="btn btn-primary" href="{{ slide.button_url }}" role="button">{{ slide.button_text }}<i class="fas fa-chevron-right fa-sm i-post"></i></a>
+                                <a class="btn btn-primary mr-3" href="{{ slide.button_url }}" role="button">{{ slide.button_text }}<i class="fas fa-chevron-right fa-sm i-post"></i></a>
+                                <a class="btn btn-danger" href="#" role="button" data-toggle="modal" data-target="#exampleModal3"><i class="fas fa-wrench i-pre"></i>Записаться на ремонт</a>
                             </div>
                         </div>
                     {% endfor %}
@@ -210,6 +236,7 @@
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="col-lg-8">
+                    <h1>{{ main_info.title }}</h1>
                     {{ main_info.text|safe }}
                 </div>
 
@@ -266,7 +293,6 @@
                                 </ul>
                             </address>
                         <a class="btn btn-primary btn-block" href="#" role="button" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-phone-volume i-pre"></i>заказать звонок</a>
-                        <a class="btn btn-primary btn-block" href="#" role="button" data-toggle="modal" data-target="#exampleModal2"><i class="fas fa-comment i-pre"></i>обратная связь</a>
                     </div>
                 </div>
             </div>
@@ -313,53 +339,107 @@
         </div>
     </div>
 
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal2Label" aria-hidden="true">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModal2Label">Напишите нам</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form  method="POST" id="feedback-form" action="{% url 'feedback' %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <input type="text" class="form-control phone_or_email" placeholder="Ваш телефон или email">
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModal3Label">Записаться на ремонт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" novalidate id="repair-form" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Ваше имя</label>
+                                    {{ form2.name }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
                             </div>
-    
-                            <div class="form-group">
-                                <input type="text" class="form-control sub_name" placeholder="Ваше имя">
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Ваш телефон</label>
+                                    {{ form2.phone }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
                             </div>
-    
-                            <div class="form-group">
-                                <textarea class="form-control sub_message" rows="5" placeholder="Текст сообщения"></textarea>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Желаемая дата</label>
+                                    {{ form2.repair_date }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
                             </div>
-    
-                            <div class="form-group g-recaptcha mb-4" data-sitekey="6LcNnpAUAAAAAFizBV4waAV1Ehe7WBafr1RP6epY"></div>
-    
-                            <button type="submit" class="btn btn-primary btn-block feedback-submit">Отправить</button>
-                            {% if messages %}
-                                {% for message in messages %}
-                                        {{ message }}
-                                {% endfor %}
-                            {% endif %}
-    
-                            <div class="alert alert-success d-none" role="alert">
-                                <i class="fas fa-check-circle fa-3x"></i>
-                                <h5>Спасибо за заявку!</h5>
-                                <p>Ожидайте звонка менеджера в указанное Вами время</p>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Желаемое время</label>
+                                    {{ form2.repair_time }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
                             </div>
-    
-                            <div class="alert alert-danger d-none" role="alert">
-                                <i class="fas fa-exclamation-circle fa-3x"></i>
-                                <h5>Ошибка при отправке</h5>
-                                <p>Мы не получили Вашу заявку. Повторите попытку позже.</p>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Марка и модель авто</label>
+                                    {{ form2.car }}
+                                    <div class="invalid-feedback">
+                                        Это поле должно быть заполнено
+                                    </div>
+                                </div>
                             </div>
-                        </form>
-                    </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Описание проблемы (необязательно)</label>
+                                    {{ form2.description }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="customControlValidation1" required>
+                            <label class="custom-control-label small" for="customControlValidation1">Нажимая кнопку «отправить заявку», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных</label>
+                        </div>
+
+                        <div class="form-group g-recaptcha mb-4" data-sitekey="6LcNnpAUAAAAAFizBV4waAV1Ehe7WBafr1RP6epY"></div>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="mb-3 p-2 alert-danger">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <button class="btn btn-primary" type="submit">отправить заявку</button>
+
+                        <div class="alert alert-success d-none" role="alert">
+                            <i class="fas fa-check-circle fa-3x"></i>
+                            <h5>Спасибо за заявку!</h5>
+                            <p>Ожидайте звонка менеджера по указанному Вами телефону</p>
+                        </div>
+
+                        <div class="alert alert-danger d-none" role="alert">
+                            <i class="fas fa-exclamation-circle fa-3x"></i>
+                            <h5>Ошибка при отправке</h5>
+                            <p>Мы не получили Вашу заявку. Повторите попытку позже.</p>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
     </div>
 {% endblock %}

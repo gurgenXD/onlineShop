@@ -95,6 +95,11 @@ i.i-post {
     transform: rotate(180deg);
 }
 
+.dropdown-item.active {
+    background-color: transparent;
+    color: #fecb00 !important;
+}
+
 .scroll-to-top {
     position: fixed;
     bottom: 30px;
@@ -203,6 +208,10 @@ article ul ol {
 
 .zoom-image:hover::after {
     opacity: 1;
+}
+
+.gal-item:hover img {
+    opacity: .9;
 }
 
 @media (max-width: 991.98px) {
@@ -480,11 +489,20 @@ h1 {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
+    -webkit-transition: -webkit-transform .1s ease-in-out;
+    transition: -webkit-transform .1s ease-in-out;
+    transition: transform .1s ease-in-out;
+    transition: transform .1s ease-in-out, -webkit-transform .1s ease-in-out;
 }
 
 .categories-grid-item:hover {
     background-color: #fecb00;
     color: #223a5c;
+}
+
+.categories-grid-item:hover .categories-grid-item-img {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 .cgi-h {

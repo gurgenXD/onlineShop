@@ -97,6 +97,24 @@ $(function() {
     $(".time-input").mask("Позвонить в: 99:99");
 });
 
+$(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+});
+
 $('.slider-for').slick({
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -293,39 +311,6 @@ $(document).ready(function(){
                 } else {
                     $('#callback-form .alert-danger').removeClass('d-none');
                     $('#callback-form .alert-danger').addClass('d-block');
-                }
-			}
-		});
-    });
-
-	$('#feedback-form .feedback-submit').click(function(e) {
-        e.preventDefault();
-        csrf_token = $('#feedback-form [name="csrfmiddlewaretoken"]').val();
-        phone_or_email = $('#feedback-form .phone_or_email').val();
-        name = $('#feedback-form .sub_name').val();
-        message = $('#feedback-form .sub_message').val();
-        recaptcha_response = $('#feedback-form [name="g-recaptcha-response"]').val();
-        
-		data = {
-            "csrfmiddlewaretoken": csrf_token,
-            phone_or_email: phone_or_email,
-            name: name,
-            message: message,
-            'g-recaptcha-response': recaptcha_response,
-        }
-
-		$.ajax({
-			type: "POST",
-			url: $('#feedback-form').attr('action'),
-			data: data,
-			success: function(data) {
-                if (data.alert_success) {
-                    $('#feedback-form .alert-success').removeClass('d-none');
-                    $('#feedback-form .alert-success').addClass('d-block');
-                }
-                else {
-                    $('#feedback-form .alert-danger').removeClass('d-none');
-                    $('#feedback-form .alert-danger').addClass('d-block');
                 }
 			}
 		});
